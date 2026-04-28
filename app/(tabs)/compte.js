@@ -1,6 +1,5 @@
 import { View } from 'react-native'
-const index = () => {
+const compte = () => {
     return <View></View>
-
 }
-export default index
+export default compte
