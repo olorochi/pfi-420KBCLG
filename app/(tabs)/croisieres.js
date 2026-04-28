@@ -1,7 +1,7 @@
-import Croisiere from '../../composants/croisiere'
-import croisieres from '../../trips.json'
+import Croisiere from '../composants/croisiere'
+import croisieres from '../trips.json'
 import { Text, View, FlatList, Pressable } from 'react-native'
-import styles from '../../styles.json'
+import styles from '../styles.json'
 import { useRouter } from 'expo-router'
 
 const index = () => {
@@ -22,21 +22,18 @@ const PressableCroisiere = ({voyage}) => {
     const router = useRouter();
 
     return (
-        <Pressable style={({pressed}) => {
-                const base = {
+        <Pressable style={({pressed}) => [{
                     padding: 25,
                     margin: 5,
                     borderRadius: 10,
                     flex: 1,
                     backgroundColor: 'lightblue'
-                }
-
-                return pressed ? [base, {backgroundColor: '#5555aa'}] : base
-            }}
+                }, pressed ? {backgroundColor: '#5555aa'} : {backgroundColor: 'lightblue'}]
+            }
             onPress={() => {
                 router.navigate({
-                    pathname:'/croisiere.js',
-                    params:{ ligne: voyage.cruiseLine, croisiere: voyage.croisieres }
+                    pathname:'/croisiere',
+                    params:{ ligne: voyage.cruiseLine, croisiereJSON: JSON.stringify(voyage.croisieres) }
                 })
             }}>
             <Text style={{

@@ -6,11 +6,13 @@ export default function Croisiere({ligne, croisieres}) {
     return (
         <View>
             <Text style={styles.ligne}>{ligne}</Text>
-            {
-            croisieres.map((c) => (
-                <Text key={key++} style={styles.croisiere}>Destination: {c.destination}{"\n"}départ de {c.depart}</Text>
-            ))
-            }
+            {croisieres.map((c) => (
+                <Text key={key++} style={styles.croisiere}>
+                    Destination: {c.destination}{"\n "}
+                    départ de {c.depart}{"\n "}
+                    nombre de jours: {c.nbreJours}
+                </Text>
+            ))}
         </View>
     )
 }
