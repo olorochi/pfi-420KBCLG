@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { View, Text, Pressable, StyleSheet, ScrollView, Image } from "react-native";
 import MapView, { Marker, Circle, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import {getLocales} from 'expo-localization';
@@ -18,7 +18,7 @@ const translations = {
 const i18n = new I18n(translations);
 i18n.locale = getLocales()[0].languageCode;
 
-const warehouses = [
+const warehouses = [ // TODO: extract to JSON imports
   {
     id: 1,
     name: "Laval",
