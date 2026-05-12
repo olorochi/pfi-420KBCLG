@@ -1,35 +1,51 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { View, Text, Pressable, StyleSheet, ScrollView, Image } from "react-native";
 import MapView, { Marker, Circle, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
+import {getLocales} from 'expo-localization';
+import {I18n} from 'i18n-js';
+import { SafeAreaView } from "react-native-safe-area-context";
+
+const translations = {
+  en: {
+    warehouse: "Warehouse",
+    warehouses: "Warehouses"
+  },
+  fr: {
+    warehouse: "Entrepôt",
+    warehouses: "Entrepôts"
+  }
+}
+const i18n = new I18n(translations);
+i18n.locale = getLocales()[0].languageCode;
 
 const warehouses = [
   {
     id: 1,
-    name: "Entrepôt Laval",
+    name: "Laval",
     latitude: 45.6066,
     longitude: -73.7124,
   },
   {
     id: 2,
-    name: "Entrepôt Montréal",
+    name: "Montréal",
     latitude: 45.5019,
     longitude: -73.5674,
   },
   {
     id: 3,
-    name: "Entrepôt Terrebonne",
+    name: "Terrebonne",
     latitude: 45.7004,
     longitude: -73.6473,
   },
   {
     id: 4,
-    name: "Entrepôt Longueuil",
+    name: "Longueuil",
     latitude: 45.5312,
     longitude: -73.5181,
   },
   {
     id: 5,
-    name: "Entrepôt Blainville",
+    name: "Blainville",
     latitude: 45.6669,
     longitude: -73.8825,
   },
@@ -52,13 +68,13 @@ const route = [
   { latitude: 45.6160, longitude: -73.8390 },
 ];
 
-export default function Warehouses) {
+export default function Warehouses() {
   const [selected, setSelected] = useState(null);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.sidebar}>
-        <Text style={styles.title}>Entrepôts</Text>
+        <Text style={styles.title}>{i18n.t("warehouses")}</Text>
 
         <ScrollView>
           {warehouses.map((w) => {
@@ -74,7 +90,7 @@ export default function Warehouses) {
                 onPress={() => setSelected(w)}
               >
                 <Text style={styles.buttonText}>
-                  {w.name}
+                  {i18n.t("warehouse")} {w.name}
                 </Text>
               </Pressable>
             );
@@ -101,7 +117,7 @@ export default function Warehouses) {
           </Marker>
 
           {warehouses.map((w) => (
-            <View>
+            <View key={w.id}>
               <Marker
                 coordinate={{
                   latitude: w.latitude,
@@ -136,7 +152,7 @@ export default function Warehouses) {
           />
         </MapView>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -178,4 +194,4 @@ const styles = StyleSheet.create({
     height: 40,
     resizeMode: "contain",
   },
-}); 
+});
