@@ -20,36 +20,11 @@ const i18n = new I18n(translations);
 i18n.locale = getLocales()[0].languageCode;
 
 const warehouses = [
-  {
-    id: 1,
-    name: "Laval",
-    latitude: 45.6066,
-    longitude: -73.7124,
-  },
-  {
-    id: 2,
-    name: "Montréal",
-    latitude: 45.5019,
-    longitude: -73.5674,
-  },
-  {
-    id: 3,
-    name: "Terrebonne",
-    latitude: 45.7004,
-    longitude: -73.6473,
-  },
-  {
-    id: 4,
-    name: "Longueuil",
-    latitude: 45.5312,
-    longitude: -73.5181,
-  },
-  {
-    id: 5,
-    name: "Blainville",
-    latitude: 45.6669,
-    longitude: -73.8825,
-  },
+  { id: 1, name: "Laval", latitude: 45.6066, longitude: -73.7124, },
+  { id: 2, name: "Montréal", latitude: 45.5019, longitude: -73.5674, },
+  { id: 3, name: "Terrebonne", latitude: 45.7004, longitude: -73.6473, },
+  { id: 4, name: "Longueuil", latitude: 45.5312, longitude: -73.5181, },
+  { id: 5, name: "Blainville", latitude: 45.6669, longitude: -73.8825, }
 ];
 
 const home = {
@@ -62,7 +37,7 @@ export default function Warehouses() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.sidebar}>
+      <View style={styles.list}>
         <Text style={styles.title}>{i18n.t("warehouses")}</Text>
 
         <ScrollView>
@@ -72,10 +47,7 @@ export default function Warehouses() {
             return (
               <Pressable
                 key={w.id}
-                style={[
-                  styles.button,
-                  active && styles.selectedButton,
-                ]}
+                style={[ styles.button, active && styles.selectedButton ]}
                 onPress={() => setSelected(w)}
               >
                 <Text style={styles.buttonText}>
@@ -91,12 +63,7 @@ export default function Warehouses() {
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
-          initialRegion={{
-            latitude: 45.61,
-            longitude: -73.75,
-            latitudeDelta: 1.35,
-            longitudeDelta: 0.35,
-          }}
+          initialRegion={{ latitude: 45.61, longitude: -73.75, latitudeDelta: 1.35, longitudeDelta: 0.35, }}
         >
           <Marker coordinate={home} title="Maison">
             <Image
@@ -115,17 +82,11 @@ export default function Warehouses() {
                 title={w.name}
                 onPress={() => setSelected(w)}
               >
-                <Image
-                  source={require("./assets/warehouse.jpg")}
-                  style={styles.icon}
-                />
+                <Image source={require("./assets/warehouse.jpg")} style={styles.icon} />
               </Marker>
 
               <Circle
-                center={{
-                  latitude: w.latitude,
-                  longitude: w.longitude,
-                }}
+                center={{ latitude: w.latitude, longitude: w.longitude, }}
                 radius={5000}
                 strokeWidth={2}
                 strokeColor="rgba(255,0,0,0.8)"
@@ -134,11 +95,7 @@ export default function Warehouses() {
             </View>
           ))}
 
-          <Polyline
-            coordinates={route}
-            strokeWidth={5}
-            strokeColor="blue"
-          />
+          <Polyline coordinates={route} strokeWidth={5} strokeColor="blue" />
         </MapView>
       </View>
     </SafeAreaView>
@@ -149,7 +106,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  sidebar: {
+  list: {
     flex: 1,
     backgroundColor: "#f2f2f2",
     padding: 10,
