@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-const compte = () => {
+
+export default function compte() {
     return <View></View>
 }
-export default compte
