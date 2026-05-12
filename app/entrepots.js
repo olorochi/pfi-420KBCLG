@@ -4,6 +4,7 @@ import MapView, { Marker, Circle, Polyline, PROVIDER_GOOGLE } from "react-native
 import {getLocales} from 'expo-localization';
 import {I18n} from 'i18n-js';
 import { SafeAreaView } from "react-native-safe-area-context";
+import route from './route'
 
 const translations = {
   en: {
@@ -18,7 +19,7 @@ const translations = {
 const i18n = new I18n(translations);
 i18n.locale = getLocales()[0].languageCode;
 
-const warehouses = [ // TODO: extract to JSON imports
+const warehouses = [
   {
     id: 1,
     name: "Laval",
@@ -55,18 +56,6 @@ const home = {
   latitude: 45.616,
   longitude: -73.839,
 };
-
-const route = [
-  { latitude: 45.6669, longitude: -73.8825 },
-  { latitude: 45.6590, longitude: -73.8700 },
-  { latitude: 45.6535, longitude: -73.8780 },
-  { latitude: 45.6460, longitude: -73.8600 },
-  { latitude: 45.6400, longitude: -73.8670 },
-  { latitude: 45.6310, longitude: -73.8480 },
-  { latitude: 45.6240, longitude: -73.8530 },
-  { latitude: 45.6200, longitude: -73.8420 },
-  { latitude: 45.6160, longitude: -73.8390 },
-];
 
 export default function Warehouses() {
   const [selected, setSelected] = useState(null);
