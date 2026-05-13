@@ -61,7 +61,7 @@ export default function AccueilScreen() {
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Damien Lefebvre et Théothyme Perras</Text>
+          <Text style={styles.footerText}>Damien Lefebvre et Théotime Perras</Text>
           <Text style={styles.footerSub}>420-KBC-LG — Hiver 2026</Text>
         </View>
       </ScrollView>
