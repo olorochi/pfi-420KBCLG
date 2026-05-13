@@ -19,13 +19,13 @@ export default function admin() {
     }
 
     try {
-      // await db.runAsync(
-      //   "INSERT INTO Produit (nom, description, prix, image) VALUES (?, ?, ?, ?)",
-      //   name,
-      //   desc,
-      //   price,
-      //   image
-      // );
+      await db.runAsync(
+        "INSERT INTO Produit (nom, description, prix, image) VALUES (?, ?, ?, ?)",
+        name,
+        desc,
+        price,
+        image
+      );
 
       markChanged();
 
