@@ -4,15 +4,19 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
+import { useDb } from '../../context/DbContext';
 
 export default function ProduitDetailScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const db = useSQLiteContext();
   const { ajouterAuPanier, items } = useCart();
+  const { user } = useAuth();
+  const { markChanged } = useDb();
   const [produit, setProduit] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [ajoute, setAjoute] = useState(false);
+  const [action, setAction] = useState(false);
 
   useEffect(() => { chargerProduit(); }, [id]);
 
@@ -29,7 +33,7 @@ export default function ProduitDetailScreen() {
       <View style={styles.error}>
         <Text style={styles.errorText}>Produit introuvable.</Text>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.back}>← Retour</Text>
+         <Text style={styles.back}>← Retour</Text>
         </TouchableOpacity>
       </View>
     );
@@ -43,10 +47,18 @@ export default function ProduitDetailScreen() {
     setTimeout(() => setAjoute(false), 1500);
   };
 
+  const onExit = () => {
+    if (user.admin && action) {
+      db.runSync('delete from Produit where id = ?', produit.id); // sync ensures the list never gets a deleted item
+      markChanged()
+    }
+    router.back()
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.navBar}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+        <TouchableOpacity onPress={onExit} style={styles.backBtn}>
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.navTitle} numberOfLines={1}>{produit.nom}</Text>
@@ -72,13 +84,23 @@ export default function ProduitDetailScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <TouchableOpacity
-          style={[styles.addBtn, ajoute && styles.addBtnSuccess]}
-          onPress={handleAjouter}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.addBtnText}>{ajoute ? '✓ Ajouté !' : '🛒 Ajouter au panier'}</Text>
-        </TouchableOpacity>
+        {user.admin ? (
+          <TouchableOpacity
+            style={[styles.btn, action ? styles.delBtnDanger : styles.delBtn]}
+            onPress={() => setAction(!action)}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.btnText}>{action ? "☑ 🗑︎ Supprimer" : "☐ 🗑︎ Supprimer"}</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={[styles.btn, action ? styles.addBtnSuccess : styles.addBtn]}
+            onPress={handleAjouter}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.btnText}>{action ? '✓ Ajouté !' : '🛒 Ajouter au panier'}</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -102,9 +124,12 @@ const styles = StyleSheet.create({
   inCartBadge: { backgroundColor: '#e8f5e9', borderRadius: 10, padding: 10, marginTop: 20, borderWidth: 1, borderColor: '#c8e6c9' },
   inCartText: { color: '#2d5a27', fontSize: 14, fontWeight: '600', textAlign: 'center' },
   footer: { position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: '#fff', padding: 16, borderTopWidth: 1, borderTopColor: '#e0e0e0' },
-  addBtn: { backgroundColor: '#2d5a27', borderRadius: 12, padding: 16, alignItems: 'center' },
+  btn: { borderRadius: 12, padding: 16, alignItems: 'center' },
+  addBtn: { backgroundColor: '#2d5a27', },
   addBtnSuccess: { backgroundColor: '#27ae60' },
-  addBtnText: { color: '#fff', fontSize: 17, fontWeight: '700' },
+  delBtn: { backgroundColor: "#8b1e1e" },
+  delBtnDanger: { backgroundColor: "#c0392b", },
+  btnText: { color: '#fff', fontSize: 17, fontWeight: '700' },
   error: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   errorText: { fontSize: 18, color: '#666' },
   back: { color: '#2d5a27', marginTop: 12, fontSize: 16 },

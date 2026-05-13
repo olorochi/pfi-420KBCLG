@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, Pressable, Image, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
+import { useDb } from '../../context/DbContext';
 
 export default function ProduitsScreen() {
   const router = useRouter();
@@ -9,7 +10,8 @@ export default function ProduitsScreen() {
   const [produits, setProduits] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { chargerProduits(); }, []);
+  const { changeEffect } = useDb()
+  useEffect(() => { chargerProduits(); }, [changeEffect]);
 
   const chargerProduits = async () => {
     const rows = await db.getAllAsync('SELECT * FROM Produit');
