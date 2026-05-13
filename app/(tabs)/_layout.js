@@ -2,6 +2,7 @@ import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { View, Text, StyleSheet } from 'react-native';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 import HeaderBar from '../../components/HeaderBar';
 
 function CartBadge({ count }) {
@@ -15,6 +16,7 @@ function CartBadge({ count }) {
 
 export default function TabsLayout() {
   const { totalItems } = useCart();
+  const { user } = useAuth();
 
   return (
     <>
@@ -39,12 +41,21 @@ export default function TabsLayout() {
           name="panier"
           options={{
             title: 'Panier',
+            href: user?.admin ? null : "panier",
             tabBarIcon: ({ color }) => (
               <View>
                 <Ionicons name="cart-outline" size={28} color={color} />
                 <CartBadge count={totalItems} />
               </View>
             ),
+          }}
+        />
+        <Tabs.Screen
+          name="admin"
+          options={{
+            title: 'Admin',
+            href: user?.admin ? "admin" : null,
+            tabBarIcon: ({ color }) => <Ionicons name="person-outline" size={28} color={color} />,
           }}
         />
         <Tabs.Screen
