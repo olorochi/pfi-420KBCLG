@@ -35,9 +35,9 @@ export function AuthProvider({ children }) {
     const newMdp = updates.mdp ?? user.mdp;
     const newAdresse = updates.adresse ?? user.adresse;
     const newLangue = updates.langue ?? user.langue;
-    await db.runasync(
+    await db.runAsync(
       'update client set mdp = ?, adresse = ?, langue = ? where id = ?',
-      newmdp, newadresse, newlangue, user.id
+      newMdp, newAdresse, newLangue, user.id
     );
     setUser({ ...user, ...updates });
   };
