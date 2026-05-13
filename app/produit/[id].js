@@ -43,8 +43,8 @@ export default function ProduitDetailScreen() {
 
   const handleAjouter = () => {
     ajouterAuPanier(produit);
-    setAjoute(true);
-    setTimeout(() => setAjoute(false), 1500);
+    setAction(true);
+    setTimeout(() => setAction(false), 1500);
   };
 
   const onExit = () => {
