@@ -1,5 +1,7 @@
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { useSQLiteContext } from 'expo-sqlite';
+import {getLocales} from 'expo-localization';
+import {I18n} from 'i18n-js';
 
 const AuthContext = createContext(null);
 
@@ -40,8 +42,14 @@ export function AuthProvider({ children }) {
     setUser({ ...user, ...updates });
   };
 
+  const getI18n = (translations) => {
+    const i18n = new I18n(translations);
+    i18n.locale = user.langue == "auto" ? getLocales()[0].languageCode : user.langue;
+    return i18n;
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser, getI18n }}>
       {children}
     </AuthContext.Provider>
   );

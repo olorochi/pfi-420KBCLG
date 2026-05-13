@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { View, Text, Pressable, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
 import MapView, { Marker, Circle, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
-import {getLocales} from 'expo-localization';
-import {I18n} from 'i18n-js';
 import {useRouter} from 'expo-router';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from '@expo/vector-icons';
 import route from './route.json'
+import { useAuth } from '../context/AuthContext';
 
 const translations = {
   en: {
@@ -18,8 +17,6 @@ const translations = {
     title: "Nos entrepôts"
   }
 }
-const i18n = new I18n(translations);
-i18n.locale = getLocales()[0].languageCode;
 
 const warehouses = [
   { id: 1, name: "Laval", latitude: 45.6066, longitude: -73.7124, },
@@ -35,6 +32,9 @@ const home = {
 };
 
 export default function Warehouses() {
+  const { getI18n } = useAuth();
+  const i18n = getI18n(translations)
+
   const [selected, setSelected] = useState(null);
   const router = useRouter();
 
