@@ -7,17 +7,6 @@ import { Ionicons } from '@expo/vector-icons';
 import route from './route.json'
 import { useAuth } from '../context/AuthContext';
 
-const translations = {
-  en: {
-    warehouse: "Warehouse",
-    title: "Our warehouses"
-  },
-  fr: {
-    warehouse: "Entrepôt",
-    title: "Nos entrepôts"
-  }
-}
-
 const warehouses = [
   { id: 1, name: "Laval", latitude: 45.6066, longitude: -73.7124, },
   { id: 2, name: "Montréal", latitude: 45.5019, longitude: -73.5674, },
@@ -33,7 +22,18 @@ const home = {
 
 export default function Warehouses() {
   const { getI18n } = useAuth();
-  const i18n = getI18n(translations)
+  const i18n = getI18n({
+    en: {
+      warehouse: "Warehouse",
+      title: "Our warehouses",
+      home: "Home",
+    },
+    fr: {
+      warehouse: "Entrepôt",
+      title: "Nos entrepôts",
+      home: "Maison",
+    }
+  });
 
   const [selected, setSelected] = useState(null);
   const router = useRouter();
@@ -73,7 +73,7 @@ export default function Warehouses() {
           style={styles.map}
           initialRegion={{ latitude: 45.61, longitude: -73.75, latitudeDelta: 1.35, longitudeDelta: 0.35, }}
         >
-          <Marker coordinate={home} title="Maison">
+          <Marker coordinate={home} title={i18n.t("home")}>
             <Image source={require("../assets/home.png")} style={styles.icon} />
           </Marker>
 

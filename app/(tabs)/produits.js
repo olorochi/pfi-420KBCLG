@@ -3,6 +3,7 @@ import { View, Text, FlatList, Pressable, Image, StyleSheet, ActivityIndicator }
 import { useRouter } from 'expo-router';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useDb } from '../../context/DbContext';
+import { useAuth } from '../../context/AuthContext';
 
 export default function ProduitsScreen() {
   const router = useRouter();
@@ -12,6 +13,18 @@ export default function ProduitsScreen() {
 
   const { changeEffect } = useDb()
   useEffect(() => { chargerProduits(); }, [changeEffect]);
+
+  const { getI18n } = useAuth()
+  const i18n = getI18n({
+    en: {
+      header: "Our Garden Gnomes",
+      available: "products available",
+    },
+    fr: {
+      header: "Nos Nains de Jardin",
+      available: "produits disponibles",
+    }
+  });
 
   const chargerProduits = async () => {
     const rows = await db.getAllAsync('SELECT * FROM Produit');
@@ -26,8 +39,8 @@ export default function ProduitsScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>🏡 Nos Nains de Jardin</Text>
-        <Text style={styles.subtitle}>{produits.length} produits disponibles</Text>
+        <Text style={styles.title}>🏡 {i18n.t("header")}</Text>
+        <Text style={styles.subtitle}>{produits.length} {i18n.t("available")}</Text>
       </View>
       <FlatList
         data={produits}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { View, TextInput, Pressable, Text, StyleSheet, Alert } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
 import { useDb } from "../../context/DbContext";
+import { useAuth } from '../../context/AuthContext';
 
 export default function admin() {
   const db = useSQLiteContext();
@@ -11,6 +12,32 @@ export default function admin() {
   const [desc, setDesc] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
+
+  const { getI18n } = useAuth();
+  const i18n = getI18n({
+    en: {
+      name: "Name",
+      description: "Description",
+      price: "Price",
+      image: "Image",
+      add: "Add",
+      success: "Success",
+      productAdded: "Product added.",
+      error: "Error",
+      missingFields: "Name, description and price are required.",
+    },
+    fr: {
+      name: "Nom",
+      description: "Description",
+      price: "Prix",
+      image: "Image",
+      add: "Ajouter",
+      success: "Succès",
+      productAdded: "Produit ajouté.",
+      error: "Erreur",
+      missingFields: "Nom, description et prix obligatoires.",
+    }
+  });
 
   const onAdd = async () => {
     if (!name.trim() || !desc.trim() || !price.trim()) {
@@ -34,30 +61,30 @@ export default function admin() {
       setPrice("");
       setImage("");
 
-      Alert.alert("Succès", "Produit ajouté.");
+      Alert.alert(i18n.t("success"), i18n.t("productAdded"));
     } catch (e) {
-      Alert.alert("Erreur", "Impossible d'ajouter le produit.");
+      Alert.alert(i18n.t("error"), i18n.t("missingFields"));
     }
   };
 
   return (
     <View style={styles.container}>
       <TextInput
-        placeholder="Nom"
+        placeholder={i18n.t("name")}
         value={name}
         onChangeText={setName}
         style={styles.input}
       />
 
       <TextInput
-        placeholder="Description"
+        placeholder={i18n.t("description")}
         value={desc}
         onChangeText={setDesc}
         style={styles.input}
       />
 
       <TextInput
-        placeholder="Prix"
+        placeholder={i18n.t("price")}
         value={price}
         onChangeText={setPrice}
         style={styles.input}
@@ -65,7 +92,7 @@ export default function admin() {
       />
 
       <TextInput
-        placeholder="Image"
+        placeholder={i18n.t("image")}
         value={image}
         onChangeText={setImage}
         style={styles.input}
@@ -75,7 +102,7 @@ export default function admin() {
         style={styles.button}
         onPress={onAdd}
       >
-        <Text style={styles.buttonText}>Ajouter</Text>
+        <Text style={styles.buttonText}>{i18n.t("add")}</Text>
       </Pressable>
     </View>
   );

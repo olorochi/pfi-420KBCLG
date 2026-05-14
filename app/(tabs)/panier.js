@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, Modal, Alert, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useCart } from '../../context/CartContext';
@@ -6,19 +6,54 @@ import { useAuth } from '../../context/AuthContext';
 
 export default function PanierScreen() {
   const { items, modifierQuantite, retirerDuPanier, viderPanier, totalPrix } = useCart();
-  const { user } = useAuth();
+  const { user, getI18n } = useAuth();
   const [modalVisible, setModalVisible] = useState(false);
+
+  const i18n = getI18n({
+    en: {
+      cart: "My cart",
+      emptyCart: "Your cart is empty",
+      browseHint: "Browse products and add some!",
+      item: "item(s)",
+      totalOrder: "Order total",
+      empty: "Empty",
+      emptyLong: "Empty cart",
+      confirmEmpty: "Are you sure?",
+      cancel: "Cancel",
+      buy: "Buy",
+      orderConfirmed: "Order confirmed!",
+      thanks: "Thank you",
+      thanksFor: "your purchase",
+      close: "Close",
+    },
+    fr: {
+      cart: "Mon panier",
+      emptyCart: "Votre panier est vide",
+      browseHint: "Parcourez nos produits et ajoutez-en !",
+      item: "article(s)",
+      totalOrder: "Total de la commande",
+      empty: "Vider",
+      emptyLong: "Vider le panier",
+      confirmEmpty: "Êtes-vous sûr ?",
+      cancel: "Annuler",
+      buy: "Acheter",
+      orderConfirmed: "Commande confirmée !",
+      thanks: "Merci",
+      thanksFor: "votre achat",
+      close: "Fermer",
+    }
+  });
 
   if (items.length === 0) {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>🛒 Mon Panier</Text>
+          <Text style={styles.headerTitle}>🛒 {i18n.t("cart")}</Text>
         </View>
         <View style={styles.empty}>
           <Text style={styles.emptyIcon}>🛒</Text>
-          <Text style={styles.emptyText}>Votre panier est vide</Text>
-          <Text style={styles.emptySubtext}>Parcourez nos nains et ajoutez-en un !</Text>
+          <Text style={styles.emptyText}>{i18n.t("emptyCart")}</Text>
+          <Text style={styles.emptySubtext}>{i18n.t("browseHint")}</Text>
         </View>
       </View>
     );
@@ -27,8 +62,8 @@ export default function PanierScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>🛒 Mon Panier</Text>
-        <Text style={styles.headerSub}>{items.length} article(s)</Text>
+        <Text style={styles.headerTitle}>🛒 {i18n.t("cart")}</Text>
+        <Text style={styles.headerSub}>{items.length} {i18n.t("item")}</Text>
       </View>
 
       <FlatList
@@ -61,7 +96,7 @@ export default function PanierScreen() {
         ListFooterComponent={() => (
           <View style={styles.totalSection}>
             <View style={styles.totalRow}>
-              <Text style={styles.totalLabel}>Total de la commande</Text>
+              <Text style={styles.totalLabel}>{i18n.t("totalOrder")}</Text>
               <Text style={styles.totalPrice}>{totalPrix.toFixed(2)} $</Text>
             </View>
           </View>
@@ -69,12 +104,12 @@ export default function PanierScreen() {
       />
 
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.viderBtn} onPress={() => Alert.alert('Vider le panier', 'Êtes-vous sûr ?', [{ text: 'Annuler', style: 'cancel' }, { text: 'Vider', style: 'destructive', onPress: viderPanier }])}>
+        <TouchableOpacity style={styles.viderBtn} onPress={() => Alert.alert(i18n.t("emptyLong"), i18n.t("confirmEmpty"), [{ text: i18n.t("cancel"), style: 'cancel' }, { text: i18n.t("empty"), style: 'destructive', onPress: viderPanier }])}>
           <Ionicons name="trash-outline" size={18} color="#c0392b" />
-          <Text style={styles.viderText}>  Vider</Text>
+          <Text style={styles.viderText}>  {i18n.t("empty")}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.acheterBtn} onPress={() => setModalVisible(true)}>
-          <Text style={styles.acheterText}>Acheter — {totalPrix.toFixed(2)} $</Text>
+          <Text style={styles.acheterText}>{i18n.t("buy")} — {totalPrix.toFixed(2)} $</Text>
         </TouchableOpacity>
       </View>
 
@@ -82,8 +117,8 @@ export default function PanierScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard}>
             <Text style={styles.modalIcon}>🎉</Text>
-            <Text style={styles.modalTitle}>Commande confirmée !</Text>
-            <Text style={styles.modalSubtitle}>Merci {user ? user.nom : ''} pour votre achat !</Text>
+            <Text style={styles.modalTitle}>{i18n.t("orderConfirmed")}</Text>
+            <Text style={styles.modalSubtitle}>{i18n.t("thanks")} {user ? user.nom : ''} {i18n.t("thanksFor")}</Text>
             <View style={styles.modalDivider} />
             <ScrollView style={styles.modalItems} showsVerticalScrollIndicator={false}>
               {items.map((item) => (
@@ -100,7 +135,7 @@ export default function PanierScreen() {
             </View>
             <Text style={styles.modalAddress}>Livraison à : {user ? user.adresse : ''}</Text>
             <TouchableOpacity style={styles.modalBtn} onPress={() => { viderPanier(); setModalVisible(false); }}>
-              <Text style={styles.modalBtnText}>Fermer</Text>
+              <Text style={styles.modalBtnText}>{i18n.t("close")}</Text>
             </TouchableOpacity>
           </View>
         </View>

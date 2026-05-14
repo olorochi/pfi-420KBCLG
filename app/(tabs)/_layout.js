@@ -16,7 +16,22 @@ function CartBadge({ count }) {
 
 export default function TabsLayout() {
   const { totalItems } = useCart();
-  const { user } = useAuth();
+  const { user, getI18n } = useAuth();
+
+  const i18n = getI18n({
+    en: {
+      products: "Products",
+      cart: "Cart",
+      account: "Account",
+      admin: "Admin",
+    },
+    fr: {
+      products: "Produits",
+      cart: "Panier",
+      account: "Compte",
+      admin: "Admin",
+    }
+  });
 
   return (
     <>
@@ -33,14 +48,14 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="produits"
           options={{
-            title: 'Produits',
+            title: i18n.t("products"),
             tabBarIcon: ({ color }) => <Ionicons name="grid-outline" size={28} color={color} />,
           }}
         />
         <Tabs.Screen
           name="panier"
           options={{
-            title: 'Panier',
+            title: i18n.t("products"),
             href: user?.admin ? null : "panier",
             tabBarIcon: ({ color }) => (
               <View>
@@ -53,7 +68,7 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="admin"
           options={{
-            title: 'Admin',
+            title: i18n.t("admin"),
             href: user?.admin ? "admin" : null,
             tabBarIcon: ({ color }) => <Ionicons name="person-outline" size={28} color={color} />,
           }}
@@ -61,7 +76,7 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="compte"
           options={{
-            title: 'Compte',
+            title: i18n.t("admin"),
             tabBarIcon: ({ color }) => <Ionicons name="person-outline" size={28} color={color} />,
           }}
         />

@@ -12,11 +12,32 @@ export default function ProduitDetailScreen() {
   const router = useRouter();
   const db = useSQLiteContext();
   const { ajouterAuPanier, items } = useCart();
-  const { user } = useAuth();
+  const { user, getI18n } = useAuth();
   const { markChanged } = useDb();
   const [produit, setProduit] = useState(null);
   const [loading, setLoading] = useState(true);
   const [action, setAction] = useState(false);
+
+  const i18n = getI18n({
+    en: {
+      back: "Back",
+      description: "Description",
+      alreadyInCart: "already in your cart",
+      addToCart: "Add to cart",
+      added: "Added!",
+      delete: "Delete",
+      productNotFound: "Product not found",
+    },
+    fr: {
+      back: "Retour",
+      description: "Description",
+      alreadyInCart: "déjà dans votre panier",
+      addToCart: "Ajouter au panier",
+      added: "Ajouté !",
+      delete: "Supprimer",
+      productNotFound: "Produit introuvable",
+    }
+  });
 
   useEffect(() => { chargerProduit(); }, [id]);
 
@@ -31,9 +52,9 @@ export default function ProduitDetailScreen() {
   if (!produit) {
     return (
       <View style={styles.error}>
-        <Text style={styles.errorText}>Produit introuvable.</Text>
+        <Text style={styles.errorText}>{i18n.t("productNotFound")}.</Text>
         <TouchableOpacity onPress={() => router.back()}>
-         <Text style={styles.back}>← Retour</Text>
+         <Text style={styles.back}>← {i18n.t("back")}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -73,11 +94,11 @@ export default function ProduitDetailScreen() {
             <Text style={styles.prix}>{produit.prix} $</Text>
           </View>
           <View style={styles.divider} />
-          <Text style={styles.descriptionLabel}>Description</Text>
+          <Text style={styles.descriptionLabel}>{i18n.t("description")}</Text>
           <Text style={styles.description}>{produit.description}</Text>
           {quantiteDansPanier > 0 && (
             <View style={styles.inCartBadge}>
-              <Text style={styles.inCartText}>{quantiteDansPanier} déjà dans votre panier</Text>
+              <Text style={styles.inCartText}>{quantiteDansPanier} {i18n.t("alreadyInCart")}</Text>
             </View>
           )}
         </View>
@@ -90,7 +111,7 @@ export default function ProduitDetailScreen() {
             onPress={() => setAction(!action)}
             activeOpacity={0.85}
           >
-            <Text style={styles.btnText}>{action ? "☑ 🗑︎ Supprimer" : "☐ 🗑︎ Supprimer"}</Text>
+            <Text style={styles.btnText}>{action ? `☑ 🗑︎ ${i18n.t("delete")}` : `☐ 🗑︎ ${i18n.t("delete")}`}</Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -98,7 +119,7 @@ export default function ProduitDetailScreen() {
             onPress={handleAjouter}
             activeOpacity={0.85}
           >
-            <Text style={styles.btnText}>{action ? '✓ Ajouté !' : '🛒 Ajouter au panier'}</Text>
+            <Text style={styles.btnText}>{action ? `✓ ${i18n.t("added")}` : `🛒 ${i18n.t("addToCart")}`}</Text>
           </TouchableOpacity>
         )}
       </View>

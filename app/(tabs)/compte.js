@@ -11,7 +11,7 @@ const LANGUES = [
 ];
 
 export default function CompteScreen() {
-  const { user, updateUser, logout } = useAuth();
+  const { user, updateUser, logout, getI18n } = useAuth();
   const router = useRouter();
   const [mdp, setMdp] = useState(user ? user.mdp : '');
   const [adresse, setAdresse] = useState(user ? user.adresse : '');
@@ -19,15 +19,54 @@ export default function CompteScreen() {
   const [editing, setEditing] = useState(false);
 
   if (!user) return null;
+  const i18n = getI18n({
+    en: {
+      account: "Account",
+      myAccount: "My account",
+      modify: "Edit",
+      name: "Name",
+      password: "Password",
+      address: "Address",
+      preferredLanguage: "Preferred language",
+      cancel: "Cancel",
+      save: "Save",
+      logout: "Log out",
+      warehouses: "View our warehouses",
+      admin: "Administrator",
+      client: "Client",
+      success: "Success",
+      updated: "Information updated.",
+      error: "Error",
+      emptyFields: "Fields cannot be empty.",
+    },
+    fr: {
+      myAccount: "Mon compte",
+      modify: "Modifier",
+      name: "Nom",
+      password: "Mot de passe",
+      address: "Adresse",
+      preferredLanguage: "Langue préférée",
+      cancel: "Annuler",
+      save: "Sauvegarder",
+      logout: "Se déconnecter",
+      warehouses: "Voir nos entrepôts",
+      admin: "Administrateur",
+      client: "Client",
+      success: "Succès",
+      updated: "Informations mises à jour.",
+      error: "Erreur",
+      emptyFields: "Les champs ne peuvent pas être vides.",
+    }
+  });
 
   const handleSauvegarder = async () => {
     if (!mdp.trim() || !adresse.trim()) {
-      Alert.alert('Erreur', 'Les champs ne peuvent pas être vides.');
+      Alert.alert(i18n.t("error"), i18n.t("emptyFields"));
       return;
     }
     await updateUser({ mdp, adresse, langue });
     setEditing(false);
-    Alert.alert('Succès', 'Informations mises à jour.');
+    Alert.alert(i18n.t("success"), i18n.t("updated"));
   };
 
   return (
@@ -37,25 +76,25 @@ export default function CompteScreen() {
           <Text style={styles.avatarText}>{user.nom[0].toUpperCase()}</Text>
         </View>
         <Text style={styles.headerName}>{user.nom}</Text>
-        <Text style={styles.headerRole}>{user.admin ? '👑 Administrateur' : '🛍️ Client'}</Text>
+        <Text style={styles.headerRole}>{user.admin ? `👑 ${i18n.t("admin")}` : `🛍️ ${i18n.t("client")}`}</Text>
       </View>
 
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Mon compte</Text>
+          <Text style={styles.sectionTitle}>{i18n.t("myAccount")}</Text>
           {!editing && (
             <TouchableOpacity onPress={() => setEditing(true)} style={styles.editBtn}>
-              <Text style={styles.editBtnText}>Modifier</Text>
+              <Text style={styles.editBtnText}>{i18n.t("modify")}</Text>
             </TouchableOpacity>
           )}
         </View>
 
-        <Text style={styles.fieldLabel}>Nom</Text>
+        <Text style={styles.fieldLabel}>{i18n.t("name")}</Text>
         <View style={styles.fieldLocked}>
           <Text style={styles.fieldText}>{user.nom}</Text>
         </View>
 
-        <Text style={styles.fieldLabel}>Mot de passe</Text>
+        <Text style={styles.fieldLabel}>{i18n.t("password")}</Text>
         {editing ? (
           <TextInput style={styles.input} value={mdp} onChangeText={setMdp} secureTextEntry={true} placeholderTextColor="#aaa" placeholder="Nouveau mot de passe" />
         ) : (
@@ -64,7 +103,7 @@ export default function CompteScreen() {
           </View>
         )}
 
-        <Text style={styles.fieldLabel}>Adresse</Text>
+        <Text style={styles.fieldLabel}>{i18n.t("address")}</Text>
         {editing ? (
           <TextInput style={styles.input} value={adresse} onChangeText={setAdresse} multiline={true} placeholderTextColor="#aaa" placeholder="Votre adresse" />
         ) : (
@@ -73,7 +112,7 @@ export default function CompteScreen() {
           </View>
         )}
 
-        <Text style={styles.fieldLabel}>Langue préférée</Text>
+        <Text style={styles.fieldLabel}>{i18n.t("preferedLanguage")}</Text>
         <View style={styles.langueRow}>
           {LANGUES.map((l) => (
             <TouchableOpacity
@@ -90,10 +129,10 @@ export default function CompteScreen() {
         {editing && (
           <View style={styles.editActions}>
             <TouchableOpacity style={styles.annulerBtn} onPress={() => { setMdp(user.mdp); setAdresse(user.adresse); setLangue(user.langue); setEditing(false); }}>
-              <Text style={styles.annulerText}>Annuler</Text>
+              <Text style={styles.annulerText}>{i18n.t("cancel")}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.sauvegarderBtn} onPress={handleSauvegarder}>
-              <Text style={styles.sauvegarderText}>Sauvegarder</Text>
+              <Text style={styles.sauvegarderText}>{i18n.t("save")}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -101,12 +140,12 @@ export default function CompteScreen() {
 
       <TouchableOpacity style={styles.entrepotBtn} onPress={() => router.push('/entrepots')}>
         <Ionicons name="location-outline" size={22} color="#2d5a27" />
-        <Text style={styles.entrepotText}>  Voir nos entrepôts</Text>
+        <Text style={styles.entrepotText}>  {i18n.t("warehouses")}</Text>
         <Ionicons name="chevron-forward" size={18} color="#aaa" />
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.logoutBtn} onPress={() => { logout(); router.replace('/'); }}>
-        <Text style={styles.logoutText}>Se déconnecter</Text>
+        <Text style={styles.logoutText}>{i18n.t("logout")}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

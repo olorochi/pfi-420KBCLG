@@ -1,11 +1,19 @@
-import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'expo-router';
 
 export default function HeaderBar() {
-  const { user, logout } = useAuth();
+  const { user, logout, getI18n } = useAuth();
   const router = useRouter();
+
+  const i18n = getI18n({
+    en: {
+      disconnect: "Disconnect"
+    },
+    fr: {
+      disconnect: "Déconnexion"
+    }
+  })
 
   if (!user) return null;
 
@@ -23,7 +31,7 @@ export default function HeaderBar() {
         <Text style={styles.lang}>{langueLabel}</Text>
       </View>
       <TouchableOpacity onPress={handleLogout} style={styles.logoutBtn}>
-        <Text style={styles.logoutText}>Déconnexion</Text>
+        <Text style={styles.logoutText}>{i18n.t("disconnect")}</Text>
       </TouchableOpacity>
     </View>
   );

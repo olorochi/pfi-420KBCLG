@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { I18n } from 'i18n-js';
+import { getLocales } from 'expo-localization';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   Alert, KeyboardAvoidingView, Platform, ScrollView, Image,
@@ -12,16 +14,50 @@ export default function AccueilScreen() {
   const { login } = useAuth();
   const router = useRouter();
 
+  const i18n = new I18n({
+    en: {
+      title: "Garden Citizens",
+      subtitle: '"THE" garden gnome shop!',
+      login: "Login",
+      username: "Username",
+      password: "Password",
+      passwordPlaceholder: "Password",
+      connect: "Sign in",
+      testAccounts: "Test accounts",
+      error: "Error",
+      fillFields: "Please fill all fields.",
+      invalidLogin: "Invalid username or password.",
+      and: "and",
+      winter: "Winter",
+    },
+    fr: {
+      title: "Citoyens de jardin",
+      subtitle: '"LA" boutique de nains de jardins!',
+      login: "Connexion",
+      username: "Nom d'utilisateur",
+      password: "Mot de passe",
+      passwordPlaceholder: "Mot de passe",
+      connect: "Se connecter",
+      testAccounts: "Comptes test",
+      error: "Erreur",
+      fillFields: "Veuillez remplir tous les champs.",
+      invalidLogin: "Nom d'utilisateur ou mot de passe invalide.",
+      and: "et",
+      winter: "Hiver",
+    }
+  });
+  i18n.locale = getLocales()[0].languageCode;
+
   const handleLogin = async () => {
     if (!nom.trim() || !mdp.trim()) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
+      Alert.alert(i18n.t("error"), i18n.t("fillFields"));
       return;
     }
     const success = await login(nom.trim(), mdp.trim());
     if (success) {
       router.replace('/(tabs)/produits');
     } else {
-      Alert.alert('Erreur', "Nom d'utilisateur ou mot de passe invalide.");
+      Alert.alert(i18n.t("error"), i18n.t("invalidLogin"));
     }
   };
 
@@ -30,13 +66,13 @@ export default function AccueilScreen() {
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         <View style={styles.heroContainer}>
           <Image source={{ uri: 'https://imgur.com/a/aWqETz3' }} style={styles.logo} resizeMode="contain"/>
-          <Text style={styles.title}>Citoyens de jardin</Text>
-          <Text style={styles.subtitle}>"LA" boutique de nains de jardins!</Text>
+          <Text style={styles.title}>{i18n.t("title")}</Text>
+          <Text style={styles.subtitle}>{i18n.t("subtitle")}</Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Connexion</Text>
-          <Text style={styles.label}>Nom d'utilisateur</Text>
+          <Text style={styles.cardTitle}>{i18n.t("login")}</Text>
+          <Text style={styles.label}>{i18n.t("username")}</Text>
           <TextInput
             style={styles.input}
             value={nom}
@@ -45,24 +81,24 @@ export default function AccueilScreen() {
             autoCapitalize="none"
             placeholderTextColor="#aaa"
           />
-          <Text style={styles.label}>Mot de passe</Text>
+          <Text style={styles.label}>{i18n.t("password")}</Text>
           <TextInput
             style={styles.input}
             value={mdp}
             onChangeText={setMdp}
-            placeholder="Mot de passe"
+            placeholder={i18n.t("passwordPlaceholder")}
             secureTextEntry={true}
             placeholderTextColor="#aaa"
           />
           <TouchableOpacity style={styles.btn} onPress={handleLogin}>
-            <Text style={styles.btnText}>Se connecter</Text>
+            <Text style={styles.btnText}>{i18n.t("connect")}</Text>
           </TouchableOpacity>
-          <Text style={styles.hint}>Comptes test : Damien / 1234  |  Admin / admin123</Text>
+          <Text style={styles.hint}>{i18n.t("testAccounts")} : Damien / 1234  |  Admin / admin123</Text>
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Damien Lefebvre et Théotime Perras</Text>
-          <Text style={styles.footerSub}>420-KBC-LG — Hiver 2026</Text>
+          <Text style={styles.footerText}>Damien Lefebvre {i18n.t("and")} Théotime Perras</Text>
+          <Text style={styles.footerSub}>420-KBC-LG — {i18n.t("winter")} 2026</Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
