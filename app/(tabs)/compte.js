@@ -112,7 +112,7 @@ export default function CompteScreen() {
           </View>
         )}
 
-        <Text style={styles.fieldLabel}>{i18n.t("preferedLanguage")}</Text>
+        <Text style={styles.fieldLabel}>{i18n.t("preferredLanguage")}</Text>
         <View style={styles.langueRow}>
           {LANGUES.map((l) => (
             <TouchableOpacity
