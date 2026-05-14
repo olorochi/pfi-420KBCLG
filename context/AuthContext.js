@@ -44,7 +44,7 @@ export function AuthProvider({ children }) {
 
   const getI18n = (translations) => {
     const i18n = new I18n(translations);
-    i18n.locale = user.langue == "auto" ? getLocales()[0].languageCode : user.langue;
+    i18n.locale = user == null || user.langue == "auto" ? getLocales()[0].languageCode : user.langue;
     return i18n;
   }
 
